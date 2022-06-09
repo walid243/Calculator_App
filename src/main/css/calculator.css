@@ -1,0 +1,54 @@
+* {
+    margin: 0;
+    padding: 0;
+  }
+
+main{
+    display: flex;
+    width: 50%;
+}
+.calculator {
+    display: flex;
+    flex-direction: column;
+    border: 5px solid black;
+}
+.ctop {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 5px solid black;
+    width: 100%;
+}
+.cbody{
+    display: flex;
+
+}
+
+.key{
+ border: none;
+ height: 2em;
+ color: black;
+ font-size: 3em;
+}
+.sign{
+    background-color: #80E3D1;
+
+}
+.left_border{
+    border-left: 5px solid black;
+}
+#display {
+    text-align: end;
+    background-color: #80E3D1;
+    width: 75%;
+    font-size: xx-large;
+    color: white;
+    border: none;
+}
+button {
+    width: 100%;
+    background-color: white;
+
+}
+#clear{
+    width: 26%;
+}
