@@ -2,32 +2,39 @@
     margin: 0;
     padding: 0;
   }
-
+body{
+    display: flex;
+    justify-content: center;
+    min-width: 156px;
+}
 main{
     display: flex;
-    width: 50%;
+    justify-content: center;
+    width: 70%
+    
 }
 .calculator {
     display: flex;
     flex-direction: column;
     border: 5px solid black;
+    width: max-content
 }
 .ctop {
     display: flex;
     flex-direction: row;
     border-bottom: 5px solid black;
     width: 100%;
+    
 }
 .cbody{
     display: flex;
-
 }
 
 .key{
  border: none;
- height: 2em;
+ height: 2.5em;
  color: black;
- font-size: 3em;
+ font-size: 2em;
 }
 .sign{
     background-color: #80E3D1;
@@ -39,7 +46,7 @@ main{
 #display {
     text-align: end;
     background-color: #80E3D1;
-    width: 75%;
+    width: 300%;
     font-size: xx-large;
     color: white;
     border: none;
@@ -48,7 +55,4 @@ button {
     width: 100%;
     background-color: white;
 
-}
-#clear{
-    width: 26%;
 }
