@@ -13,10 +13,10 @@
 
 ## Headings are used to depict
 
-    - Organization. How to find key information fast with details that follow. In appropriate cases, they also may be alphabetized.
-    - Hierarchy. Much like an outline, they can show related sections and divisions.
-    - Direction. They can create a progressive path through a site’s pages.
-    - Logical movement. They may direct a viewer from one idea to the next
+- Organization. How to find key information fast with details that follow. In appropriate cases, they also may be alphabetized.
+- Hierarchy. Much like an outline, they can show related sections and divisions.
+- Direction. They can create a progressive path through a site’s pages.
+- Logical movement. They may direct a viewer from one idea to the next
 
 Tools such as buttons or left and/or right-hand column effects can be used to draw the user's attention to special information.
 Copying and Pasting Content from Another Source
