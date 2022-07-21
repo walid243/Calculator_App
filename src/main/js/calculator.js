@@ -1,4 +1,4 @@
-let memValue = "";
+let memValue = null;
 let num1 = null;
 let num2 = null;
 let result;
@@ -37,45 +37,72 @@ function clearAll() {
 }
 function clearDisplay() {
   getDisplay().value = null;
+
+}
+function clearMem(){
   memValue = null;
   result = null;
 }
+
+function isCero(value) {
+  return value == "0";
+}
+function isDisplayClear() {
+  return getDisplay().value == 0;
+}
+function checkDisplayableValue(value) {
+  if (isSignToggleButton(value)) {
+    toggleDisplayNumSign();
+  } else if (hasDisplaySpace(getDisplay().value)) {
+    if (isComma(value)) {
+      if (isDisplayClear()) {
+        value = "0,";
+      } else if (includesComma(getDisplay().value)) {
+        return;
+      }
+    } else if (isCero(value)) {
+      if (isDisplayClear()) {
+        return;
+      }
+    }
+    displayAddValue(value);
+  }
+}
+function checkNotDisplayableValue(value) {
+  if (isOperator(value)) {
+    saveValues(value);
+  } else if (isClearButton(value)) {
+    clearAll();
+  } else if (isEventButton(value)) {
+    even();
+  }
+}
+function saveValues(value) {
+  highlightOperator(value);
+  operation = assignOperation(value);
+  console.log(operation);
+  saveFirstNumber();
+}
+function haveToClearDisplay(value) {
+  if (result != null && !isOperator(value) ||
+    (!isOperator(value) && operation != null && memValue != null)
+  ) {
+    return true
+  } else {
+    return false
+  }
+}
 function takeValue(value) {
+  if (haveToClearDisplay(value)) {
+    console.log("se limpio");
+    clearMem()
+    clearDisplay();
+  }
   console.log(value);
-  if (value != 0 || (value == 0 && getDisplay().value != 0)) {
-    if (
-      (result == null && (value == "3" || value == ",") || (!isOperator(value) && operation != null && memValue == num1)
-      )
-    ) {
-      console.log("se limpio");
-      clearDisplay();
-    }
-    if (isDisplayable(value) && canDisplay(getDisplay().value)) {
-      console.log("displayable");
-      if (isComma(value)) {
-        console.log("is comma");
-        value = isFirstComma(value);
-      } else if (isSignToggleButton(value)) {
-        console.log(value + " -> +/-");
-        toggleDisplayNumSign();
-      }
-      if (value != "Control" && value != null) {
-        displayAddValue(value);
-      }
-    } else {
-      if (isOperator(value)) {
-        highlightOperator(value);
-        operation = saveOperator(value);
-        console.log(operation);
-        saveFirstNumber();
-      } else if (isClearButton(value)) {
-        console.log(value + " -> Clear");
-        clearAll();
-      } else if (isEventButton(value)) {
-        console.log(value + " -> =");
-        even();
-      }
-    }
+  if (isDisplayable(value)) {
+    checkDisplayableValue(value);
+  } else {
+    checkNotDisplayableValue(value);
   }
 }
 function isOperator(value) {
@@ -92,9 +119,9 @@ function toggleComma(value) {
 function saveInMemory() {
   let value = getDisplay().value;
   memValue = toggleComma(value);
-  console.log(memValue + "-> en saveInMem");
+  console.log(memValue + "-> en memoria");
 }
-function saveOperator(value) {
+function assignOperation(value) {
   switch (value) {
     case "+":
       return addition;
@@ -127,7 +154,7 @@ function isEventButton(value) {
 function isSignToggleButton(value) {
   return ["+/-", "Control"].includes(value);
 }
-function canDisplay(value) {
+function hasDisplaySpace(value) {
   if (value.length < 10) {
     return true;
   } else if (
@@ -136,7 +163,6 @@ function canDisplay(value) {
   ) {
     return true;
   } else if (value.length < 12 && value.includes(",") && value.includes("-")) {
-    console.log(value);
     return true;
   } else {
     return false;
@@ -145,11 +171,11 @@ function canDisplay(value) {
 function isComma(value) {
   return value == ",";
 }
-function isFirstComma() {
-  let value = getDisplay().value;
-  if (value == 0) {
+function isFirstElement() {
+  let displayValue = getDisplay().value;
+  if (displayValue == 0) {
     return "0,";
-  } else if (!includesComma(value)) {
+  } else if (!includesComma(displayValue)) {
     return ",";
   } else {
     return null;
@@ -159,16 +185,11 @@ function includesComma(value) {
   return value.includes(",");
 }
 function isDisplayable(value) {
-  let digit = /\d*,*/;
+  let digit = /\d/;
   return (
     digit.test(value) || value == "," || value == "Control" || value == "+/-"
   );
 }
-// function dotToComma(value) {
-//   if (value == ".") {
-//     return ",";
-//   }
-// }
 function displayAddValue(value) {
   let display = getDisplay();
 
@@ -225,8 +246,8 @@ function even() {
   unHighlightOperator();
   console.log("result: " + result);
   let displayableResult = toggleComma(result.toString());
-  console.log("result: " + displayableResult);
-  if (canDisplay(displayableResult)) {
+  console.log("displayableResult: " + displayableResult);
+  if (hasDisplaySpace(displayableResult)) {
     clearDisplay();
     displayAddValue(displayableResult);
   } else {
@@ -234,12 +255,12 @@ function even() {
   }
 }
 function keyBoard(event) {
-  event.preventDefault();
   if (allowedKeys().includes(event.key)) {
-    console.log(event.key + " yes");
+    event.preventDefault();
+
     takeValue(event.key);
   } else {
-    console.log(event.key + " no");
+    console.log(event.key + " no permitido");
   }
 }
 function allowedKeys() {
