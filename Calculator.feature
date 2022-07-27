@@ -289,7 +289,7 @@ And the user writes 23
 And the user presses the = 
 Then the display screen should show -23
 
-Scenario: Button Disabled -> Do it on Figma
+Scenario: Button Disabled
 Given in the display screen the -123456789,5 is shown
 When the user hovers over a numerical button
 Then the cursor does not change to a clicking cursor
@@ -317,7 +317,7 @@ Then the changing signs should be disabled
 Example:
 |sequence|
 |     0  |
-|    0 , |
+|    0,  |
 |  2 +   |
 | 1 / 0 =|
 

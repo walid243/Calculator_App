@@ -1,57 +1,65 @@
 * {
-    margin: 0;
-    padding: 0;
-  }
-body{
-    display: flex;
-    justify-content: center;
-    min-width: 156px;
+  margin: 0;
+  padding: 0;
 }
-main{
-    display: flex;
-    justify-content: center;
-    width: 70%
+body {
+  display: flex;
+  justify-content: center;
+  min-width: 156px;
+}
+main {
+  display: flex;
+  justify-content: center;
+  width: 70%;
 }
 .calculator {
-    display: flex;
-    flex-direction: column;
-    border: 5px solid black;
-    width: max-content
+  display: flex;
+  flex-direction: column;
+  border: 5px solid black;
+  width: max-content;
 }
 .ctop {
-    display: flex;
-    flex-direction: row;
-    border-bottom: 5px solid black;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 5px solid black;
+  width: 100%;
 }
-.cbody{
-    display: flex;
+.cbody {
+  display: flex;
 }
 
-.key{
- border: none;
- height: 2.5em;
- color: black;
- font-size: 2em;
+.key {
+  border: none;
+  height: 2.5em;
+  color: black;
+  font-size: 2em;
 }
-.sign{
-    background-color: #80E3D1;
+.sign {
+  background-color: #80e3d1;
 }
-.highlightedOperator{
-    background-color: #019b81;
+.highlightedOperator {
+  background-color: #019b81;
 }
-.left_border{
-    border-left: 5px solid black;
+.left_border {
+  border-left: 5px solid black;
 }
 #display {
-    text-align: end;
-    background-color: #80E3D1;
-    width: 300%;
-    font-size: xx-large;
-    color: white;
-    border: none;
+  text-align: end;
+  background-color: #80e3d1;
+  width: 200%;
+  font-size: xx-large;
+  color: white;
+  border: none;
 }
 button {
-    width: 100%;
-    background-color: white;
+  width: 100%;
+  background-color: white;
+}
+button:disabled {
+  background-color: #464646;
+  cursor: not-allowed;
+}
+.key:active {
+    transition: 0.5ms;
+    opacity: 0.9;
 }
