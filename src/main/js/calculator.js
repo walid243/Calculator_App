@@ -9,6 +9,7 @@ var areOperatorButtonsDisabled = false;
 var haveToDisableSignToggleButton = true;
 var haveToDisableCommaButton = false;
 var haveToDisableCeroButton = true;
+var haveToDisableDisplayableButtons = false;
 var haveToRestoreAllButtons = false;
 var haveToRestoreDisplayableButtons = false;
 addEvents();
@@ -67,17 +68,22 @@ function checkDisplayableValue(value) {
     if (isComma(value)) {
       if (isDisplayClear()) {
         value = "0,";
-      } else if (includesComma(getDisplay().value)) {
+      } else if (isDecimal(getDisplay().value)) {
         return;
       }
     } else if (isCero(value)) {
       if (isDisplayClear()) {
+        haveToDisableCeroButton = true
+        updateButtonStatus()
         return;
       }
     }
     displayAddValue(value);
-    updateButtonStatus();
+  } else {
+    haveToDisableDisplayableButtons = true;
   }
+  updateButtonStatus();
+
 }
 function checkNotDisplayableValue(value) {
   if (isOperator(value)) {
@@ -96,7 +102,7 @@ function calculate() {
   if (isNaN(num1)) {
     num1 = 0;
   }
-  if (isNaN(num2)) {
+  if (isNaN(num2) || isCero(num2)) {
     return errorMsg();
   }
   return operation(num1, num2);
@@ -197,20 +203,26 @@ function even() {
   result = result.toString()
   let displayableResult 
 
-  if (includesComma(result)) {
+  if (isDecimal(result)) {
     result = cutDecimal(result);
-    displayableResult = toggleComma(result);
+    haveToDisableCommaButton = true;
   }
+  displayableResult = toggleComma(result);
   if (canDisplay(displayableResult) && displayableResult != "ERROR") {
     clearDisplay();
+    if (isCero(displayableResult)){
+      haveToDisableCeroButton = true;
+    }
     displayAddValue(displayableResult);
+    haveToDisableSignToggleButton = true;
   } else {
     clearDisplay();
-    disableAllButtons();
     displayAddValue(errorMsg());
   }
   num1 = null;
   num2 = null;
+  updateButtonStatus()
+
 }
 function errorMsg() {
   return "ERROR";
@@ -229,9 +241,7 @@ function haveToClearDisplay(value) {
   }
 }
 function hasDisplaySpace(value) {
-  if (operation != null) {
-    return true;
-  } else if (value.length < 10) {
+ if (value.length < 10) {
     return true;
   } else if (
     value.length < 11 &&
@@ -258,7 +268,7 @@ function highlightOperator(value) {
     }
   }
 }
-function includesComma(value) {
+function isDecimal(value) {
   return value.includes(",") || value.includes(".");
 }
 function isNumberDisplayed(value) {
@@ -294,7 +304,7 @@ function isFirstElement() {
   let displayValue = getDisplay().value;
   if (displayValue == 0) {
     return "0,";
-  } else if (!includesComma(displayValue)) {
+  } else if (!isDecimal(displayValue)) {
     return ",";
   } else {
     return null;
@@ -356,12 +366,11 @@ function keyBoardEvent() {
 function keyBoard(event) {
   if (isAllowedKey(event.key)) {
     event.preventDefault();
-
     if (
       (!areDisplayableButtonsDisabled && isDisplayableValueKey(event.key)) ||
       (!areOperatorButtonsDisabled && isOperatorValueKey(event.key)) ||
-      isClearValueKey(event.key)
-    ) {
+      isClearValueKey(event.key) || isSignToggleButton(event.key))
+     {
       takeValue(event.key);
     }
   }
@@ -386,7 +395,6 @@ function saveInMemory() {
   let value = getDisplay().value;
   memValue = toggleComma(value);
 }
-
 function saveFirstNumber() {
   saveInMemory();
 
@@ -412,6 +420,9 @@ function saveValues(value) {
   }
   operation = assignOperation(value);
   haveToRestoreDisplayableButtons = true;
+  haveToDisableCeroButton = false;
+  haveToDisableCommaButton = true;
+  haveToDisableSignToggleButton = true;
   updateButtonStatus();
   highlightOperator(value);
 }
@@ -455,16 +466,19 @@ function toggleDisplayNumSign() {
   }
 }
 function updateButtonStatus() {
+  if (haveToRestoreAllButtons) {
+    restoreAllButtons();
+    haveToRestoreAllButtons = false;
+  }
+  if (haveToRestoreDisplayableButtons) {
+    restoreDisplayableButtons();
+    haveToRestoreDisplayableButtons = false;
+  }
   if (!isNumberDisplayed(getDisplay().value) || haveToDisableSignToggleButton) {
     disableSignToggleButton();
     haveToDisableSignToggleButton = false;
   } else {
     enableSignToggleButton();
-  }
-  if (!isDisplayClear() || !haveToDisableCeroButton) {
-    enableCeroButton();
-  } else {
-    disableCeroButton();
   }
   if (getDisplay().value.includes(",") || haveToDisableCommaButton) {
     disableCommaButton();
@@ -474,16 +488,14 @@ function updateButtonStatus() {
   }
   if (getDisplay().value.includes("ERROR")) {
     disableAllButtons();
-  } else if (!hasDisplaySpace(getDisplay().value)) {
+  } else if (haveToDisableDisplayableButtons) {
     disableDisplayableButtons();
+    haveToDisableDisplayableButtons = false;
   }
-  if (haveToRestoreAllButtons) {
-    restoreAllButtons();
-    haveToRestoreAllButtons = false;
-  }
-  if (haveToRestoreDisplayableButtons) {
-    restoreDisplayableButtons();
-    haveToRestoreDisplayableButtons = false;
+  if (!isDisplayClear() || !haveToDisableCeroButton) {
+    enableCeroButton();
+  } else {
+    disableCeroButton();
   }
 }
 function unHighlightOperator() {
