@@ -64,13 +64,12 @@ function clearMemory() {
 function checkDisplayableValue(value) {
   if (isSignToggleButton(value)) {
     toggleDisplayNumSign();
-  } else if (hasDisplaySpace(getDisplay().value)) {
+  } else {
     if (isComma(value)) {
       if (isDisplayClear()) {
         value = "0,";
-      } else if (isDecimal(getDisplay().value)) {
-        return;
       }
+      haveToDisableCommaButton = true;
     } else if (isCero(value)) {
       if (isDisplayClear()) {
         haveToDisableCeroButton = true
@@ -79,7 +78,8 @@ function checkDisplayableValue(value) {
       }
     }
     displayAddValue(value);
-  } else {
+  }  
+  if (!hasDisplaySpace(getDisplay().value))  {
     haveToDisableDisplayableButtons = true;
   }
   updateButtonStatus();
@@ -480,11 +480,16 @@ function updateButtonStatus() {
   } else {
     enableSignToggleButton();
   }
-  if (getDisplay().value.includes(",") || haveToDisableCommaButton) {
+  if (isDecimal(getDisplay().value)) {
     disableCommaButton();
     haveToDisableCommaButton = false;
   } else {
     enableCommaButton();
+  }
+  if (!isDisplayClear() || !haveToDisableCeroButton) {
+    enableCeroButton();
+  } else {
+    disableCeroButton();
   }
   if (getDisplay().value.includes("ERROR")) {
     disableAllButtons();
@@ -492,11 +497,7 @@ function updateButtonStatus() {
     disableDisplayableButtons();
     haveToDisableDisplayableButtons = false;
   }
-  if (!isDisplayClear() || !haveToDisableCeroButton) {
-    enableCeroButton();
-  } else {
-    disableCeroButton();
-  }
+
 }
 function unHighlightOperator() {
   let operators = document.getElementsByClassName("operator");
