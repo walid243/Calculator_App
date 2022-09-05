@@ -8,6 +8,6 @@ await page.goto(url);
 
 
 Then('the display screen should show the following value: {string}', async function (string) {
-const display = await page.locator('data-testid=display');
+const display = await page.locator('data-testid=display').inputValue();
 expect(display).toBe(string);
 });
